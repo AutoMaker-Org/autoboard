@@ -1,6 +1,6 @@
 import type { CardRepository } from "~/db/repositories/card-repository";
 import type { ProjectRepository } from "~/db/repositories/project-repository";
-import { claudeProvider } from "~/services/claude-provider";
+import type { IAgentCodeQuery } from "~/services/agent-query.interface";
 import { ValidationError, NotFoundError } from "./errors";
 import type { Card } from "~/db/types";
 
@@ -16,7 +16,8 @@ export interface GenerateCardTitleResult {
 export class GenerateCardTitleUseCase {
   constructor(
     private cardRepository: CardRepository,
-    private projectRepository: ProjectRepository
+    private projectRepository: ProjectRepository,
+    private agentQuery: IAgentCodeQuery
   ) {}
 
   async execute(input: GenerateCardTitleInput): Promise<GenerateCardTitleResult> {
@@ -89,8 +90,8 @@ Description: ${kanbanCard.description}`;
       descriptionPreview: kanbanCard.description.substring(0, 100),
     });
 
-    console.log("[generate-title] Starting Claude query...");
-    const stream = claudeProvider.query({
+    console.log("[generate-title] Starting agent query...");
+    const stream = this.agentQuery.query({
       prompt,
       model: "claude-haiku-4-5",
       cwd: projectPath,

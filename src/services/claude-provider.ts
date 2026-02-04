@@ -1,14 +1,14 @@
 /**
- * Claude Provider - Implementation of IClaudeCodeQuery interface.
+ * Claude Provider - Implementation of IAgentCodeQuery interface.
  * Contains all implementation details for running Claude code queries.
  */
 
 import { query, type Options } from "@anthropic-ai/claude-agent-sdk";
 import type {
-  IClaudeCodeQuery,
-  ClaudeQueryOptions,
-  ClaudeMessage,
-} from "./claude-query.interface";
+  IAgentCodeQuery,
+  AgentQueryOptions,
+  AgentMessage,
+} from "./agent-query.interface";
 
 /**
  * System environment variables to pass to the SDK.
@@ -37,17 +37,17 @@ function buildEnv(): Record<string, string | undefined> {
 }
 
 /**
- * ClaudeProvider - Implements IClaudeCodeQuery interface.
+ * ClaudeProvider - Implements IAgentCodeQuery interface.
  * Handles all SDK-specific details for communicating with Claude's code query function.
  */
-class ClaudeProvider implements IClaudeCodeQuery {
+class ClaudeProvider implements IAgentCodeQuery {
   /**
    * Execute a query against Claude's code query function.
    *
    * @param options - Configuration options for the query
-   * @returns AsyncGenerator that yields Claude messages from the stream
+   * @returns AsyncGenerator that yields agent messages from the stream
    */
-  async *query(options: ClaudeQueryOptions): AsyncGenerator<ClaudeMessage> {
+  async *query(options: AgentQueryOptions): AsyncGenerator<AgentMessage> {
     const {
       prompt,
       model,
@@ -61,7 +61,7 @@ class ClaudeProvider implements IClaudeCodeQuery {
       abortController,
     } = options;
 
-    // Convert ClaudeQueryOptions to SDK Options type
+    // Convert AgentQueryOptions to SDK Options type
     const sdkOptions: Options = {
       model,
       cwd,
@@ -79,7 +79,7 @@ class ClaudeProvider implements IClaudeCodeQuery {
 
     // Yield messages from the stream
     for await (const msg of stream) {
-      yield msg as ClaudeMessage;
+      yield msg as AgentMessage;
     }
   }
 }

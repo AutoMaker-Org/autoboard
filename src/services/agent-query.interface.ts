@@ -1,37 +1,37 @@
 /**
- * Interface for Claude code query functionality.
- * Abstracts the communication with Claude's code query function.
+ * Interface for agent code query functionality.
+ * Abstracts the communication with agent code query providers (Claude, Codex, Cursor CLI, etc.).
  */
 
 /**
- * Content block within a Claude message.
+ * Content block within an agent message.
  */
-export interface ClaudeMessageContentBlock {
+export interface AgentMessageContentBlock {
   type: string;
   text?: string;
   [key: string]: unknown;
 }
 
 /**
- * Message structure from Claude query stream.
+ * Message structure from agent query stream.
  */
-export interface ClaudeMessage {
+export interface AgentMessage {
   type: string;
   subtype?: string;
   message?: {
-    content?: ClaudeMessageContentBlock[];
+    content?: AgentMessageContentBlock[];
     [key: string]: unknown;
   };
   [key: string]: unknown;
 }
 
 /**
- * Options for querying Claude.
+ * Options for querying an agent.
  */
-export interface ClaudeQueryOptions {
-  /** The prompt/task for Claude to execute */
+export interface AgentQueryOptions {
+  /** The prompt/task for the agent to execute */
   prompt: string;
-  /** Model to use (e.g., "claude-haiku-4-5", "claude-sonnet-4-20250514") */
+  /** Model to use (provider-specific, e.g., "claude-haiku-4-5", "claude-sonnet-4-20250514") */
   model: string;
   /** Working directory (project path) for the query */
   cwd: string;
@@ -52,15 +52,15 @@ export interface ClaudeQueryOptions {
 }
 
 /**
- * Interface for Claude code query provider.
+ * Interface for agent code query provider.
  * Implementations handle all SDK-specific details internally.
  */
-export interface IClaudeCodeQuery {
+export interface IAgentCodeQuery {
   /**
-   * Execute a query against Claude's code query function.
+   * Execute a query against an agent's code query function.
    *
    * @param options - Configuration options for the query
-   * @returns AsyncGenerator that yields Claude messages from the stream
+   * @returns AsyncGenerator that yields agent messages from the stream
    */
-  query(options: ClaudeQueryOptions): AsyncGenerator<ClaudeMessage>;
+  query(options: AgentQueryOptions): AsyncGenerator<AgentMessage>;
 }

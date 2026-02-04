@@ -1,5 +1,6 @@
 import { APIEvent } from "@solidjs/start/server";
 import { cardRepository, projectRepository } from "~/db/repositories";
+import { claudeProvider } from "~/services/claude-provider";
 import { GenerateCardTitleUseCase } from "~/use-cases";
 import { ValidationError, NotFoundError } from "~/use-cases/errors";
 
@@ -24,7 +25,8 @@ export async function POST({ request }: APIEvent) {
 
     const useCase = new GenerateCardTitleUseCase(
       cardRepository,
-      projectRepository
+      projectRepository,
+      claudeProvider
     );
     const result = await useCase.execute({ cardId });
 
